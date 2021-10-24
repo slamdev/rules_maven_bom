@@ -36,6 +36,3 @@ jobs:
       - name: Build
         run: |
           ./bazel build //... --disk_cache=~/.cache/bazel
-      - name: Test
-        run: |
-          ./bazel test //... --disk_cache=~/.cache/bazel

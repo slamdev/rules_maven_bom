@@ -11,8 +11,8 @@ Add the following to your WORKSPACE file:
 ```starlark
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_MAVEN_BOM_VERSION = ""
-RULES_MAVEN_BOM_SHA256 = ""
+RULES_MAVEN_BOM_VERSION = "f44a79b6af2407349ce0223f6205ecb95ea18143"
+RULES_MAVEN_BOM_SHA256 = "c531149cb530dc15650868a5db6b971681de156e4746cc7770beba7837ba825e"
 
 http_archive(
     name = "slamdev_rules_maven_bom",
