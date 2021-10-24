@@ -1,0 +1,41 @@
+name: build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        bazel: [ 4.2.1, 5.0.0-pre.20211011.2 ]
+    runs-on: ${{ matrix.os }}
+    name: OS ${{ matrix.os }} bazel ${{ matrix.bazel }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/bazel
+          key: repo-cache-${{ matrix.os }}-${{ matrix.bazel }}
+      - name: Install bazelisk
+        run: |
+          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            OS=darwin
+          else
+            OS=linux
+          fi
+          curl -L -o bazel "https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-${OS}-amd64"
+          chmod +x bazel
+      - name: Set Bazelisk Version ${{ matrix.bazel }}
+        run: |
+          echo ${{ matrix.bazel }} > .bazelversion
+      - name: Build
+        run: |
+          ./bazel build //... --disk_cache=~/.cache/bazel
+      - name: Test
+        run: |
+          ./bazel test //... --disk_cache=~/.cache/bazel

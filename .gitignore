@@ -1,0 +1,6 @@
+.idea/
+/bazel-*
+/.ijwb
+/bazelisk
+.bazelversion
+baseliskw
