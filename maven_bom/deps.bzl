@@ -6,9 +6,9 @@ def maven_bom_rules_dependencies():
         java_import_external,
         name = "bom_versions_extractor",
         jar_urls = [
-            "https://github.com/slamdev/bom-versions-extractor/releases/download/0.0.1/bom-versions-extractor.jar",
+            "https://github.com/slamdev/bom-versions-extractor/releases/download/0.0.2/bom-versions-extractor.jar",
         ],
-        jar_sha256 = "a9a07705ef39fd73d49d86745d98d676e96daaf0d00a092d4884479a44912c59",
+        jar_sha256 = "008da9f3508a4d85d687229f8c8be369d4d4dcd382f4f6929453de2ccccf5238",
     )
 
 def maven_bom_import(boms, repos):
