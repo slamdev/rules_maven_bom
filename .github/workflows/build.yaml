@@ -16,23 +16,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: OS ${{ matrix.os }} bazel ${{ matrix.bazel }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup bazelisk
+        uses: bazelbuild/setup-bazelisk@v1
+      - name: Mount bazel cache
+        uses: actions/cache@v2
         with:
           path: ~/.cache/bazel
-          key: repo-cache-${{ matrix.os }}-${{ matrix.bazel }}
-      - name: Install bazelisk
-        run: |
-          if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            OS=darwin
-          else
-            OS=linux
-          fi
-          curl -L -o bazel "https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-${OS}-amd64"
-          chmod +x bazel
+          key: bazel-${{ matrix.os }}-${{ matrix.bazel }}
+      - name: Mount bazel repo cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/bazel-repo
+          key: bazel-repo-${{ matrix.os }}-${{ matrix.bazel }}
       - name: Set Bazelisk Version ${{ matrix.bazel }}
-        run: |
-          echo ${{ matrix.bazel }} > .bazelversion
-      - name: Build
-        run: |
-          ./bazel build //... --disk_cache=~/.cache/bazel
+        run: echo ${{ matrix.bazel }} > .bazelversion
+      - name: Build & Test
+        env:
+          XDG_CACHE_HOME: ~/.cache/bazel-repo
+        run: bazel --bazelrc=.github/workflows/ci.bazelrc --bazelrc=.bazelrc build //...

@@ -1,0 +1,32 @@
+name: release
+on:
+  push:
+    branches:
+      - '!*'
+    tags:
+      - '*.*.*'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Export release version
+        run: 'echo "RELEASE_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Archive release
+        run: 'tar -czvf slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz LICENSE maven_bom'
+      - name: Export checksum
+        run: 'echo "RELEASE_CHECKSUM=$(shasum -b -a 256 slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz | cut -d " " -f 1)" >> $GITHUB_ENV'
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz
+          fail_on_unmatched_files: true
+          body: |
+            ```starlark
+            http_archive(
+                name = "slamdev_rules_maven_bom",
+                sha256 = "${{ env.RELEASE_CHECKSUM }}",
+                url = "https://github.com/slamdev/rules_maven_bom/releases/download/${{ env.RELEASE_VERSION }}/slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz",
+            )
+            ```
