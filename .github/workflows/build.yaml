@@ -21,12 +21,12 @@ jobs:
       - name: Setup bazelisk
         uses: bazelbuild/setup-bazelisk@v1
       - name: Mount bazel cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/bazel
           key: bazel-${{ matrix.os }}-${{ matrix.bazel }}
       - name: Mount bazel repo cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/bazel-repo
           key: bazel-repo-${{ matrix.os }}-${{ matrix.bazel }}
