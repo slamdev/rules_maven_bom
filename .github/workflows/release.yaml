@@ -18,7 +18,7 @@ jobs:
       - name: Export checksum
         run: 'echo "RELEASE_CHECKSUM=$(shasum -b -a 256 slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz | cut -d " " -f 1)" >> $GITHUB_ENV'
       - name: Upload release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: slamdev_rules_maven_bom-v${{ env.RELEASE_VERSION }}.tar.gz
           fail_on_unmatched_files: true
